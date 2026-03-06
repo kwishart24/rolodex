@@ -72,7 +72,10 @@ function App() {
       <NavBar />
       <h1>Rolodex</h1>
       <Routes>
-        <Route path="/" element={<ContactsPage />}></Route>
+        <Route
+          path="/"
+          element={<ContactsPage contactList={contactList} />}
+        ></Route>
         <Route path="/about" element={<AboutPage />}></Route>
         <Route path="*" element={<NotFoundPage />}></Route>
       </Routes>
