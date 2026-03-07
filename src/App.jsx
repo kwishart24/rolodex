@@ -52,6 +52,7 @@ function App() {
             jobTitle: record.fields.jobTitle || '',
             company: record.fields.company || '',
             headshot: record.fields.headshot || '',
+            website: record.fields.website || '',
           };
           return contact;
         });
