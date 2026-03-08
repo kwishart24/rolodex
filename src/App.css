@@ -15,7 +15,7 @@ img {
   margin: 0 auto;
 }
 
-.currentContact > img {
+.contact-info > img {
   max-width: 30%;
 }
 

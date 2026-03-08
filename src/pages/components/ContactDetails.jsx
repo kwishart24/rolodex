@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router';
 import { fetchContacts, fetchNotes } from '../../api';
+import ContactInfo from './ContactInfo.jsx';
 import Note from './Note.jsx';
 
 //import { fetchContacts } from '../../api';
@@ -64,19 +65,18 @@ function ContactDetails() {
 
   return (
     <div className="currentContact">
-      <img src={currentContact.headshot} />
-      <ul>
-        <li>
-          Name: {`${currentContact.firstName} ${currentContact.lastName}`}
-        </li>
-        <li>Job Title: {`${currentContact.jobTitle}`}</li>
-        <li>Company: {`${currentContact.company}`}</li>
-        <li>Email: {`${currentContact.email}`}</li>
-        <li>Phone: {`${currentContact.phone}`}</li>
-        <li>
-          Website: <a>{`${currentContact.website}`}</a>
-        </li>
-      </ul>
+      <ContactInfo
+        key={contactId}
+        headshot={currentContact.headshot}
+        firstName={currentContact.firstName}
+        lastName={currentContact.lastName}
+        jobTitle={currentContact.jobTitle}
+        company={currentContact.company}
+        website={currentContact.website}
+        email={currentContact.email}
+        phone={currentContact.phone}
+        contactId={currentContact.contactId}
+      />
       <h3>Notes</h3>
       <ul>
         {contactNotes.map((note) => (
