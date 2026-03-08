@@ -5,6 +5,7 @@ function NavBar() {
     <nav>
       <NavLink to="/">My Contacts</NavLink>
       <NavLink to="/about">About</NavLink>
+      <NavLink to="/addContact">Add New Contact</NavLink>
     </nav>
   );
 }

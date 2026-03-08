@@ -7,6 +7,7 @@ import ContactsPage from './pages/ContactsPage';
 import AboutPage from './pages/AboutPage';
 import NotFoundPage from './pages/NotFoundPage';
 import ContactDetails from './pages/components/ContactDetails';
+import AddContactForm from './pages/components/AddContactForm';
 
 function App() {
   // const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
@@ -50,6 +51,7 @@ function App() {
         ></Route>
         <Route path="/about" element={<AboutPage />}></Route>
         <Route path="/:contactId" element={<ContactDetails />}></Route>
+        <Route path="/addContact" element={<AddContactForm/>}></Route>
         <Route path="*" element={<NotFoundPage />}></Route>
       </Routes>
     </div>

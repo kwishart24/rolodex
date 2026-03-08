@@ -87,3 +87,38 @@ export const fetchNotes = async () => {
     console.log('Hello');
   }
 };
+
+export const createContact = async (newContact) => {
+  const options = {
+    method: 'POST',
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      fields: {
+        firstName: newContact.firstName,
+        lastName: newContact.lastName,
+        phone: newContact.phone,
+        email: newContact.email,
+        jobTitle: newContact.jobTitle,
+        company: newContact.company,
+        website: newContact.website,
+      },
+    }),
+  };
+
+  try {
+    const resp = await fetch(contactsUrl, options);
+
+    if (!resp.ok) {
+      throw new Error(`Error creating contact: ${resp.statusText}`);
+    }
+
+    const data = await resp.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
