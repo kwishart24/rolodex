@@ -39,17 +39,6 @@ function App() {
       .catch((error) => console.log(error));
   }, []);
 
-  useEffect(() => {
-    setIsLoading(true);
-
-    fetchNotes()
-      .then((notes) => {
-        setNotesList(notes);
-        setIsLoading(false);
-        console.log(notesList);
-      })
-      .catch((error) => console.log(error));
-  }, []);
 
   return (
     <div>

@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router';
-import { fetchContacts } from '../../api';
+import { fetchContacts, fetchNotes } from '../../api';
 
 //import { fetchContacts } from '../../api';
 
 function ContactDetails() {
   const { contactId } = useParams();
-  console.log(contactId);
 
   //ContactList
   const [contactList, setContactList] = useState([]);
@@ -37,18 +36,30 @@ function ContactDetails() {
 
   //get contact info for current contact
   const currentContact = contactList.find((c) => c.contactId === contactId);
-  console.log(contactList);
+
+  //fetch notes
+  useEffect(() => {
+    setIsLoading(true);
+
+    fetchNotes()
+      .then((notes) => {
+        setNotesList(notes);
+        setIsLoading(false);
+      })
+      .catch((error) => console.log(error));
+  }, []);
+
+  //get notes for current contact from notes array
+  const contactNotes = notesList.filter((note) => note.contactId === contactId);
+  console.log(contactNotes);
 
   if (!currentContact) {
     return <p>Loading contact...</p>;
   }
 
-  //get notes for current contact from notes array
-  // const contactNotes = notesList.filter((note) => note.contactId === contactId);
-
-  // if (!contactNotes) {
-  //   return <p>Add a note!</p>;
-  // }
+  if (!contactNotes) {
+    return <p>Add a note!</p>;
+  }
 
   return (
     <div className="currentContact">
@@ -65,7 +76,7 @@ function ContactDetails() {
           Website: <a>{`${currentContact.website}`}</a>
         </li>
       </ul>
-      {/* <h3>Notes</h3>
+      <h3>Notes</h3>
       <ul>
         {contactNotes.map((note) => (
           <li key={note.noteId}>
@@ -73,7 +84,7 @@ function ContactDetails() {
             <p>{note.noteBody}</p>
           </li>
         ))}
-      </ul> */}
+      </ul>
     </div>
   );
 }
