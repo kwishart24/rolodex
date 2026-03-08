@@ -1,6 +1,4 @@
-function ContactsPage({ contactList}) {
-  console.log(contactList);
-
+function ContactsPage({ contactList }) {
   return (
     <>
       <h1>My Contacts</h1>
@@ -13,7 +11,7 @@ function ContactsPage({ contactList}) {
               {contact.jobTitle} {'| '}
               {contact.company}
             </p>
-            <a href="#">More Info</a>
+            <a href={contact.contactId}>More Info</a>
           </div>
         ))}
       </div>
