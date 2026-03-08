@@ -74,6 +74,7 @@ export const fetchNotes = async () => {
           noteId: record.id,
           noteTitle: record.fields.noteTitle || '',
           noteBody: record.fields.noteBody || '',
+          contactId: record.fields.contactId?.[0] || '',
         };
         return note;
       })

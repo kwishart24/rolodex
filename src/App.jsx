@@ -2,18 +2,21 @@ import { useState, useEffect } from 'react';
 import './App.css';
 import { Routes, Route } from 'react-router';
 import NavBar from './shared/NavBar';
-import { fetchContacts } from './api';
+import { fetchContacts, fetchNotes } from './api';
 import ContactsPage from './pages/ContactsPage';
 import AboutPage from './pages/AboutPage';
 import NotFoundPage from './pages/NotFoundPage';
 import ContactDetails from './pages/components/ContactDetails';
 
 function App() {
-  const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
-  const token = `Bearer ${import.meta.env.VITE_PAT}`;
+  // const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
+  // const token = `Bearer ${import.meta.env.VITE_PAT}`;
 
   //ContactList
   const [contactList, setContactList] = useState([]);
+
+  //NotesList
+  const [notesList, setNotesList] = useState([]);
 
   // Is loading message
   const [isLoading, setIsLoading] = useState(false);
@@ -31,10 +34,22 @@ function App() {
       .then((contacts) => {
         setContactList(contacts);
         setIsLoading(false);
+        console.log(contactList);
       })
       .catch((error) => console.log(error));
-    console.log(contactList);
-  }, [url, token]);
+  }, []);
+
+  useEffect(() => {
+    setIsLoading(true);
+
+    fetchNotes()
+      .then((notes) => {
+        setNotesList(notes);
+        setIsLoading(false);
+        console.log(notesList);
+      })
+      .catch((error) => console.log(error));
+  }, []);
 
   return (
     <div>
@@ -46,7 +61,12 @@ function App() {
           element={<ContactsPage contactList={contactList} />}
         ></Route>
         <Route path="/about" element={<AboutPage />}></Route>
-        <Route path="/:contactId" element={<ContactDetails />}></Route>
+        <Route
+          path="/:contactId"
+          element={
+            <ContactDetails contactList={contactList} notesList={notesList} />
+          }
+        ></Route>
         <Route path="*" element={<NotFoundPage />}></Route>
       </Routes>
     </div>

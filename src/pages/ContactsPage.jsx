@@ -1,4 +1,4 @@
-function ContactsPage({ contactList }) {
+function ContactsPage({ contactList}) {
   console.log(contactList);
 
   return (
