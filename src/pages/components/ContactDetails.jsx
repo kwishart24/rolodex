@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router';
 import { fetchContacts, fetchNotes } from '../../api';
+import Note from './Note.jsx';
 
 //import { fetchContacts } from '../../api';
 
@@ -79,10 +80,13 @@ function ContactDetails() {
       <h3>Notes</h3>
       <ul>
         {contactNotes.map((note) => (
-          <li key={note.noteId}>
-            <strong>{note.noteTitle}</strong>
-            <p>{note.noteBody}</p>
-          </li>
+          <Note
+            key={note.noteId}
+            noteTitle={note.noteTitle}
+            noteBody={note.noteBody}
+            noteId={note.noteId}
+            createdNoteTime={note.createdNoteTime}
+          />
         ))}
       </ul>
     </div>

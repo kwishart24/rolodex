@@ -39,7 +39,6 @@ function App() {
       .catch((error) => console.log(error));
   }, []);
 
-
   return (
     <div>
       <NavBar />
@@ -50,12 +49,7 @@ function App() {
           element={<ContactsPage contactList={contactList} />}
         ></Route>
         <Route path="/about" element={<AboutPage />}></Route>
-        <Route
-          path="/:contactId"
-          element={
-            <ContactDetails contactList={contactList} notesList={notesList} />
-          }
-        ></Route>
+        <Route path="/:contactId" element={<ContactDetails />}></Route>
         <Route path="*" element={<NotFoundPage />}></Route>
       </Routes>
     </div>
