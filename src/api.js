@@ -21,7 +21,7 @@ export const fetchContacts = async () => {
 
     const contacts = data.records
       .map((record) => {
-        if (!record.fields.firstName || !record.fields.lastName) {
+        if (!record.fields.firstName && !record.fields.lastName) {
           return null;
         }
 
@@ -66,7 +66,7 @@ export const fetchNotes = async () => {
 
     const notes = data.records
       .map((record) => {
-        if (!record.fields.noteTitle || !record.fields.noteBody) {
+        if (!record.fields.noteTitle && !record.fields.noteBody) {
           return null;
         }
 
@@ -74,6 +74,8 @@ export const fetchNotes = async () => {
           noteId: record.id,
           noteTitle: record.fields.noteTitle || '',
           noteBody: record.fields.noteBody || '',
+          contactId: record.fields.contactId?.[0] || '',
+          createdNoteTime: record.fields.createdNoteTime || '',
         };
         return note;
       })
