@@ -1,12 +1,13 @@
 const contactsUrl = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_CONTACTS_TABLE_NAME}`;
 const notesUrl = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_NOTES_TABLE_NAME}`;
-const token = `Bearer ${import.meta.env.VITE_PAT}`;
+const airtableToken = `Bearer ${import.meta.env.VITE_PAT}`;
 
+//fetching contacts from Airtable
 export const fetchContacts = async () => {
   const options = {
     method: 'GET',
     headers: {
-      Authorization: token,
+      Authorization: airtableToken,
       'Content-Type': 'application/json',
     },
   };
@@ -19,6 +20,7 @@ export const fetchContacts = async () => {
     }
     const data = await resp.json();
 
+    //displaying fetched data for each contact in airtable
     const contacts = data.records
       .map((record) => {
         if (!record.fields.firstName && !record.fields.lastName) {
@@ -47,11 +49,12 @@ export const fetchContacts = async () => {
   }
 };
 
+//fetching notes from Airtable
 export const fetchNotes = async () => {
   const options = {
     method: 'GET',
     headers: {
-      Authorization: token,
+      Authorization: airtableToken,
       'Content-Type': 'application/json',
     },
   };
@@ -88,11 +91,12 @@ export const fetchNotes = async () => {
   }
 };
 
+//create new contact in contact form
 export const createContact = async (newContact) => {
   const options = {
     method: 'POST',
     headers: {
-      Authorization: token,
+      Authorization: airtableToken,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
@@ -104,6 +108,7 @@ export const createContact = async (newContact) => {
         jobTitle: newContact.jobTitle,
         company: newContact.company,
         website: newContact.website,
+        headshot: newContact.headshot ? [{ url: newContact.headshot }] : [],
       },
     }),
   };

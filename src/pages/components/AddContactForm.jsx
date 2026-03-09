@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import { createContact } from '../../api';
+import { uploadHeadshot } from '../../upload';
 
 function AddContactForm() {
+  const [headshotFile, setHeadshotFile] = useState(null);
+
   const [contactFormData, setContactFormData] = useState({
     firstName: '',
     lastName: '',
@@ -19,8 +22,18 @@ function AddContactForm() {
     });
   };
 
+  const handleFileChange = (event) => {
+    setHeadshotFile(event.target.files[0]);
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    let headshotUrl = '';
+
+    if (headshotFile) {
+      headshotUrl = await uploadHeadshot(headshotFile);
+    }
 
     const createdContact = await createContact(contactFormData);
     console.log('New contact created:', createdContact);
@@ -35,6 +48,7 @@ function AddContactForm() {
           id="headshot"
           name="headshot"
           accept="image/png, image/jpeg"
+          onChange={handleFileChange}
         />
 
         <label htmlFor="firstName">First Name:</label>
