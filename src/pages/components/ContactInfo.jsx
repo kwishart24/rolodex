@@ -1,6 +1,6 @@
 function ContactInfo(props) {
   return (
-    <div class="contact-info">
+    <div className="contact-info">
       <img src={props.headshot} />
       <ul>
         <li>Name: {`${props.firstName} ${props.lastName}`}</li>

@@ -13,13 +13,10 @@ export const uploadHeadshot = async (file) => {
 
   const resp = await fetch(headshotUrl, {
     method: 'POST',
-    headers: {
-      Authorization: cloudinaryToken,
-      'Content-Type': 'application/json',
-    },
     body: formData,
   });
 
   const data = await resp.json();
+  console.log('Cloudinary response:', data);
   return data.secure_url; // this is the URL Airtable needs
 };

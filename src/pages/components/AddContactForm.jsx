@@ -35,8 +35,12 @@ function AddContactForm() {
       headshotUrl = await uploadHeadshot(headshotFile);
     }
 
-    const createdContact = await createContact(contactFormData);
+    const createdContact = await createContact({
+      ...contactFormData,
+      headshot: headshotUrl,
+    });
     console.log('New contact created:', createdContact);
+    console.log('Cloudinary URL:', headshotUrl);
   };
 
   return (
@@ -114,7 +118,7 @@ function AddContactForm() {
           onChange={handleChange}
         />
 
-        <button type="submit">Add New Contact</button>
+        <button type="submit">Save</button>
       </form>
     </div>
   );
