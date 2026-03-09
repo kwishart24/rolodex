@@ -1,5 +1,5 @@
 //const headshotUrl = `${import.meta.env.VITE_CLOUDINARY_URL}`;
-const cloudinaryToken = `Bearer ${import.meta.env.VITE_CLOUDINARY_API_SECRET}`;
+//const cloudinaryToken = `Bearer ${import.meta.env.VITE_CLOUDINARY_API_SECRET}`;
 
 export const uploadHeadshot = async (file) => {
   const headshotUrl = `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/upload`;

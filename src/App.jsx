@@ -35,7 +35,7 @@ function App() {
       .then((contacts) => {
         setContactList(contacts);
         setIsLoading(false);
-        console.log(contactList);
+        //console.log(contactList);
       })
       .catch((error) => console.log(error));
   }, []);
@@ -51,7 +51,7 @@ function App() {
         ></Route>
         <Route path="/about" element={<AboutPage />}></Route>
         <Route path="/:contactId" element={<ContactDetails />}></Route>
-        <Route path="/addContact" element={<AddContactForm/>}></Route>
+        <Route path="/addContact" element={<AddContactForm />}></Route>
         <Route path="*" element={<NotFoundPage />}></Route>
       </Routes>
     </div>

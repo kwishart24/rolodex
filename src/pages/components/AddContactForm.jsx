@@ -15,6 +15,10 @@ function AddContactForm() {
     website: '',
   });
 
+  const [newContactId, setNewContactId] = useState(null);
+
+  const [successMessage, setSuccessMessage] = useState('');
+
   const handleChange = (event) => {
     setContactFormData({
       ...contactFormData,
@@ -41,10 +45,37 @@ function AddContactForm() {
     });
     console.log('New contact created:', createdContact);
     console.log('Cloudinary URL:', headshotUrl);
+
+    setNewContactId(createdContact.id);
+
+    setContactFormData({
+      firstName: '',
+      lastName: '',
+      phone: '',
+      email: '',
+      jobTitle: '',
+      company: '',
+      website: '',
+    });
+
+    setHeadshotFile(null);
+
+    setSuccessMessage('Your new contact has been created!');
   };
 
   return (
     <div>
+      {successMessage && (
+        <div>
+          <p className="success">{successMessage}</p>
+          <button>
+            <a href="/">Return to My Contacts</a>
+          </button>
+          <button>
+            <a href={newContactId}>View New Contact</a>
+          </button>
+        </div>
+      )}
       <form onSubmit={handleSubmit}>
         <label htmlFor="headshot">Headshot:</label>
         <input

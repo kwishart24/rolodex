@@ -35,7 +35,7 @@ export const fetchContacts = async () => {
           email: record.fields.email || '',
           jobTitle: record.fields.jobTitle || '',
           company: record.fields.company || '',
-          headshot: record.fields.headshot?.[0].url || '',
+          headshot: record.fields.headshot?.[0].url || null,
           website: record.fields.website || '',
         };
         return contact;

@@ -31,7 +31,7 @@ function ContactDetails() {
       .then((contacts) => {
         setContactList(contacts);
         setIsLoading(false);
-        console.log(contacts);
+        //console.log(contacts);
       })
       .catch((error) => console.log(error));
   }, []);
@@ -53,7 +53,7 @@ function ContactDetails() {
 
   //get notes for current contact from notes array
   const contactNotes = notesList.filter((note) => note.contactId === contactId);
-  console.log(contactNotes);
+  //console.log(contactNotes);
 
   if (!currentContact) {
     return <p>Loading contact...</p>;
