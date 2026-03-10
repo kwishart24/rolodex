@@ -19,6 +19,20 @@ function App() {
   //NotesList
   const [notesList, setNotesList] = useState([]);
 
+  //creating new notes
+  const [noteFormData, setNoteFormData] = useState({
+    noteTitle: '',
+    noteBody: '',
+  });
+
+  //when new note is saved
+  const handleNoteChange = (event) => {
+    setNoteFormData({
+      ...noteFormData,
+      [event.target.name]: event.target.value,
+    });
+  };
+
   // Is loading message
   const [isLoading, setIsLoading] = useState(false);
 
@@ -50,8 +64,30 @@ function App() {
           element={<ContactsPage contactList={contactList} />}
         ></Route>
         <Route path="/about" element={<AboutPage />}></Route>
-        <Route path="/:contactId" element={<ContactDetails />}></Route>
-        <Route path="/addContact" element={<NewContactFormPage />}></Route>
+        <Route
+          path="/:contactId"
+          element={
+            <ContactDetails
+              noteFormData={noteFormData}
+              handleNoteChange={handleNoteChange}
+              setNoteFormData={setNoteFormData}
+              isSaving={isSaving}
+              setIsSaving={setIsSaving}
+            />
+          }
+        ></Route>
+        <Route
+          path="/addContact"
+          element={
+            <NewContactFormPage
+              noteFormData={noteFormData}
+              handleNoteChange={handleNoteChange}
+              setNoteFormData={setNoteFormData}
+              isSaving={isSaving}
+              setIsSaving={setIsSaving}
+            />
+          }
+        ></Route>
         <Route path="*" element={<NotFoundPage />}></Route>
       </Routes>
     </div>

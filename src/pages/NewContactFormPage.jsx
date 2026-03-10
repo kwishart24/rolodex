@@ -4,7 +4,13 @@ import { uploadHeadshot } from '../upload';
 import AddNewContact from './components/AddNewContact';
 import AddNewNote from './components/AddNewNote';
 
-function NewContactFormPage() {
+function NewContactFormPage({
+  noteFormData,
+  handleNoteChange,
+  setNoteFormData,
+  isSaving,
+  setIsSaving,
+}) {
   const [headshotFile, setHeadshotFile] = useState(null);
 
   const [contactFormData, setContactFormData] = useState({
@@ -21,14 +27,6 @@ function NewContactFormPage() {
 
   const [successMessage, setSuccessMessage] = useState('');
 
-  const [noteFormData, setNoteFormData] = useState({
-    noteTitle: '',
-    noteBody: '',
-  });
-
-  //Saving
-  const [isSaving, setIsSaving] = useState(false);
-
   const handleChange = (event) => {
     setContactFormData({
       ...contactFormData,
@@ -38,13 +36,6 @@ function NewContactFormPage() {
 
   const handleFileChange = (event) => {
     setHeadshotFile(event.target.files[0]);
-  };
-
-  const handleNoteChange = (event) => {
-    setNoteFormData({
-      ...noteFormData,
-      [event.target.name]: event.target.value,
-    });
   };
 
   const handleSubmit = async (event) => {
