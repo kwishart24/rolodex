@@ -16,9 +16,6 @@ function App() {
   //ContactList
   const [contactList, setContactList] = useState([]);
 
-  //NotesList
-  const [notesList, setNotesList] = useState([]);
-
   //creating new notes
   const [noteFormData, setNoteFormData] = useState({
     noteTitle: '',
@@ -31,20 +28,6 @@ function App() {
       ...noteFormData,
       [event.target.name]: event.target.value,
     });
-  };
-
-  //when contact is updated
-  const handleUpdateContact = async (event) => {
-    event.preventDefault();
-    setIsSaving(true);
-
-    try {
-      await updateContact(currentContact.contactId, contactFormData);
-      setEditingMode(null);
-      refreshContacts();
-    } finally {
-      setIsSaving(false);
-    }
   };
 
   // Is loading message

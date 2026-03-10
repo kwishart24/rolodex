@@ -1,14 +1,13 @@
 function ContactForm({
   contactFormData,
-  handleChange,
-  handleUpdateContact,
+  handleContactChange,
   isSaving,
   handleFileChange,
   successMessage,
   newContactId,
 }) {
   return (
-    <div>
+    <div className="contact-form-fields">
       {isSaving ? (
         <div className="saving-box">
           <p>Saving your contact...</p>
@@ -39,7 +38,7 @@ function ContactForm({
         id="firstName"
         name="firstName"
         value={contactFormData.firstName}
-        onChange={handleChange}
+        onChange={handleContactChange}
       />
 
       <label htmlFor="lastName">Last Name:</label>
@@ -48,7 +47,7 @@ function ContactForm({
         id="lastName"
         name="lastName"
         value={contactFormData.lastName}
-        onChange={handleChange}
+        onChange={handleContactChange}
       />
 
       <label htmlFor="phone">Phone #:</label>
@@ -57,7 +56,7 @@ function ContactForm({
         id="phone"
         name="phone"
         value={contactFormData.phone}
-        onChange={handleChange}
+        onChange={handleContactChange}
       />
 
       <label htmlFor="email">Email:</label>
@@ -66,7 +65,7 @@ function ContactForm({
         id="email"
         name="email"
         value={contactFormData.email}
-        onChange={handleChange}
+        onChange={handleContactChange}
       />
 
       <label htmlFor="jobTitle">Job Title:</label>
@@ -75,7 +74,7 @@ function ContactForm({
         id="jobTitle"
         name="jobTitle"
         value={contactFormData.jobTitle}
-        onChange={handleChange}
+        onChange={handleContactChange}
       />
 
       <label htmlFor="company">Company:</label>
@@ -84,7 +83,7 @@ function ContactForm({
         id="company"
         name="company"
         value={contactFormData.company}
-        onChange={handleChange}
+        onChange={handleContactChange}
       />
 
       <label htmlFor="website">Website:</label>
@@ -93,10 +92,8 @@ function ContactForm({
         id="website"
         name="website"
         value={contactFormData.website}
-        onChange={handleChange}
+        onChange={handleContactChange}
       />
-
-      
     </div>
   );
 }

@@ -1,3 +1,5 @@
+import NoteForm from './NoteForm';
+
 function Note({
   noteId,
   noteTitle,
@@ -8,9 +10,9 @@ function Note({
   isSaving,
   setIsSaving,
   noteFormData,
-  handleNoteChange,
   handleUpdateNote,
   handleSaveNote,
+  handleNoteChange,
 }) {
   const isEditingThisNote =
     editingMode?.type === 'note' && editingMode?.id === noteId;
@@ -32,14 +34,17 @@ function Note({
       </button>
       {isEditingThisNote && (
         <div className="note-edit-form">
-          <EditNoteForm
+          <NoteForm
             isSaving={isSaving}
             setIsSaving={setIsSaving}
             noteFormData={noteFormData}
-            handleNoteChange={handleNoteChange}
             handleUpdateNote={handleUpdateNote}
             handleSaveNote={handleSaveNote}
+            handleNoteChange={handleNoteChange}
           />
+          <button onClick={() => handleUpdateNote(noteId)} disabled={isSaving}>
+            {isSaving ? 'Saving…' : 'Save Changes'}
+          </button>
         </div>
       )}
     </li>

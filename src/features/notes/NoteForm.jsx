@@ -1,6 +1,6 @@
-function AddNewNote({ noteFormData, handleNoteChange }) {
+function NoteForm({ noteFormData, handleNoteChange }) {
   return (
-    <>
+    <div className="note-form">
       <label htmlFor="noteTitle">Note Title:</label>
       <input
         type="text"
@@ -17,8 +17,8 @@ function AddNewNote({ noteFormData, handleNoteChange }) {
         value={noteFormData.noteBody}
         onChange={handleNoteChange}
       ></textarea>
-    </>
+    </div>
   );
 }
 
-export default AddNewNote;
+export default NoteForm;

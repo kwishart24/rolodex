@@ -1,10 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router';
-import { fetchContacts, fetchNotes, createNote } from '../api.js';
+import {
+  fetchContacts,
+  fetchNotes,
+  createNote,
+  updateContact,
+  updateNote,
+} from '../api.js';
 import ContactInfo from '../features/contacts/ContactInfo.jsx';
 import Note from '../features/notes/Note.jsx';
-import AddNewNote from '../features/notes/AddNewNote.jsx';
-import EditContactForm from '../features/contacts/EditContactForm.jsx';
+import NoteForm from '../features/notes/NoteForm.jsx';
+import ContactForm from '../features/contacts/ContactForm.jsx';
 
 function ContactDetails({
   noteFormData,
@@ -15,7 +21,9 @@ function ContactDetails({
   setIsLoading,
   contactFormData,
   handleContactChange,
-  handleUpdateContact,
+  handleFileChange,
+  successMessage,
+  newContactId,
 }) {
   const { contactId } = useParams();
 
@@ -48,6 +56,47 @@ function ContactDetails({
 
       // optional: refresh notes
       fetchNotes().then(setNotesList);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  //updating contact info
+  const handleUpdateContact = async (event) => {
+    event.preventDefault();
+    setIsSaving(true);
+
+    try {
+      await updateContact(currentContact.contactId, contactFormData);
+
+      const updatedContacts = await fetchContacts();
+      setContactList(updatedContacts);
+
+      setEditingMode(null);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  //when note is updated
+  const handleUpdateNote = async (noteId) => {
+    setIsSaving(true);
+
+    try {
+      await updateNote(noteId, {
+        noteTitle: noteFormData.noteTitle,
+        noteBody: noteFormData.noteBody,
+      });
+
+      // Refresh notes
+      const updatedNotes = await fetchNotes();
+      setNotesList(updatedNotes);
+
+      // Exit edit mode
+      setEditingMode(null);
+
+      // Clear form
+      setNoteFormData({ noteTitle: '', noteBody: '' });
     } finally {
       setIsSaving(false);
     }
@@ -88,7 +137,13 @@ function ContactDetails({
 
   //get notes for current contact from notes array
   const contactNotes = notesList.filter((note) => note.contactId === contactId);
-  //console.log(contactNotes);
+
+  //add new note closes when user clicks to edit individual note
+  useEffect(() => {
+    if (editingMode !== null) {
+      setShowNoteForm(false);
+    }
+  }, [editingMode]);
 
   if (!currentContact) {
     return <p>Loading contact...</p>;
@@ -118,30 +173,48 @@ function ContactDetails({
             editingMode?.type === 'contact' ? null : { type: 'contact' }
           )
         }
-        disabled={editingMode?.type === 'note'}
+        disabled={editingMode?.type === 'note'} // disable while editing a note
       >
         {editingMode?.type === 'contact' ? 'Cancel' : 'Edit Contact'}
       </button>
-      <EditContactForm
-        isSaving={isSaving}
-        setIsSaving={setIsSaving}
-        contactFormData={contactFormData}
-        handleContactChange={handleContactChange}
-        handleUpdateContact={handleUpdateContact}
-      />
+
+      {editingMode?.type === 'contact' && (
+        <>
+          <ContactForm
+            isSaving={isSaving}
+            setIsSaving={setIsSaving}
+            contactFormData={contactFormData}
+            handleContactChange={handleContactChange}
+            handleUpdateContact={handleUpdateContact}
+            handleFileChange={handleFileChange}
+            successMessage={null}
+            newContactId={null}
+          />
+          <button
+            onClick={() =>
+              setEditingMode(
+                editingMode?.type === 'contact' ? null : { type: 'contact' }
+              )
+            }
+            disabled={editingMode?.type === 'note'}
+          >
+            {editingMode?.type === 'contact' ? 'Cancel' : 'Edit Contact'}
+          </button>
+        </>
+      )}
       <h3>Notes</h3>
       <button
         onClick={() => {
-          if (editingMode?.type === 'contact') return;
+          if (editingMode !== null) return;
           setShowNoteForm(!showNoteForm);
         }}
-        disabled={editingMode?.type === 'contact'}
+        disabled={editingMode !== null}
       >
         {showNoteForm ? 'Hide Note Form' : 'Add New Note'}
       </button>
       {showNoteForm && (
         <div className="note-form-container">
-          <AddNewNote
+          <NoteForm
             noteFormData={noteFormData}
             handleNoteChange={handleNoteChange}
           />
@@ -165,8 +238,8 @@ function ContactDetails({
             setIsSaving={setIsSaving}
             noteFormData={noteFormData}
             handleNoteChange={handleNoteChange}
-            handleUpdateNote={handleUpdateNote}
             handleSaveNote={handleSaveNote}
+            handleUpdateNote={handleUpdateNote}
           />
         ))}
       </ul>
