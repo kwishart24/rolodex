@@ -2,11 +2,12 @@ import { useState, useEffect } from 'react';
 import './App.css';
 import { Routes, Route } from 'react-router';
 import NavBar from './shared/NavBar';
-import { fetchContacts, fetchNotes } from './api';
+import { fetchContacts } from './api';
 import ContactsPage from './pages/ContactsPage';
 import AboutPage from './pages/AboutPage';
 import NotFoundPage from './pages/NotFoundPage';
 import ContactDetails from './pages/components/ContactDetails';
+import NewContactFormPage from './pages/NewContactFormPage';
 
 function App() {
   // const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
@@ -17,6 +18,20 @@ function App() {
 
   //NotesList
   const [notesList, setNotesList] = useState([]);
+
+  //creating new notes
+  const [noteFormData, setNoteFormData] = useState({
+    noteTitle: '',
+    noteBody: '',
+  });
+
+  //when new note is saved
+  const handleNoteChange = (event) => {
+    setNoteFormData({
+      ...noteFormData,
+      [event.target.name]: event.target.value,
+    });
+  };
 
   // Is loading message
   const [isLoading, setIsLoading] = useState(false);
@@ -34,7 +49,7 @@ function App() {
       .then((contacts) => {
         setContactList(contacts);
         setIsLoading(false);
-        console.log(contactList);
+        //console.log(contactList);
       })
       .catch((error) => console.log(error));
   }, []);
@@ -49,7 +64,30 @@ function App() {
           element={<ContactsPage contactList={contactList} />}
         ></Route>
         <Route path="/about" element={<AboutPage />}></Route>
-        <Route path="/:contactId" element={<ContactDetails />}></Route>
+        <Route
+          path="/:contactId"
+          element={
+            <ContactDetails
+              noteFormData={noteFormData}
+              handleNoteChange={handleNoteChange}
+              setNoteFormData={setNoteFormData}
+              isSaving={isSaving}
+              setIsSaving={setIsSaving}
+            />
+          }
+        ></Route>
+        <Route
+          path="/addContact"
+          element={
+            <NewContactFormPage
+              noteFormData={noteFormData}
+              handleNoteChange={handleNoteChange}
+              setNoteFormData={setNoteFormData}
+              isSaving={isSaving}
+              setIsSaving={setIsSaving}
+            />
+          }
+        ></Route>
         <Route path="*" element={<NotFoundPage />}></Route>
       </Routes>
     </div>

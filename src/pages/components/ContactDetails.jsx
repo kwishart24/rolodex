@@ -1,12 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router';
-import { fetchContacts, fetchNotes } from '../../api';
+import { fetchContacts, fetchNotes, createNote } from '../../api';
 import ContactInfo from './ContactInfo.jsx';
 import Note from './Note.jsx';
+import AddNewNote from './AddNewNote.jsx';
 
-//import { fetchContacts } from '../../api';
-
-function ContactDetails() {
+function ContactDetails({
+  noteFormData,
+  handleNoteChange,
+  setNoteFormData,
+  isSaving,
+  setIsSaving,
+}) {
   const { contactId } = useParams();
 
   //ContactList
@@ -15,14 +20,36 @@ function ContactDetails() {
   //NotesList
   const [notesList, setNotesList] = useState([]);
 
+  //Showing the section to add a new note
+  const [showNoteForm, setShowNoteForm] = useState(false);
+
+  const handleSaveNote = async () => {
+    setIsSaving(true);
+
+    try {
+      await createNote({
+        ...noteFormData,
+        contactId: currentContact.contactId,
+      });
+
+      // ⬇️ THIS IS WHERE YOU RESET THE FORM
+      setNoteFormData({ noteTitle: '', noteBody: '' });
+
+      // optional: close the form
+      setShowNoteForm(false);
+
+      // optional: refresh notes
+      fetchNotes().then(setNotesList);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   // Is loading message
   const [isLoading, setIsLoading] = useState(false);
 
   // Error Message
   const [errorMessage, setErrorMessage] = useState('');
-
-  //Saving
-  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     setIsLoading(true);
@@ -31,7 +58,7 @@ function ContactDetails() {
       .then((contacts) => {
         setContactList(contacts);
         setIsLoading(false);
-        console.log(contacts);
+        //console.log(contacts);
       })
       .catch((error) => console.log(error));
   }, []);
@@ -53,7 +80,7 @@ function ContactDetails() {
 
   //get notes for current contact from notes array
   const contactNotes = notesList.filter((note) => note.contactId === contactId);
-  console.log(contactNotes);
+  //console.log(contactNotes);
 
   if (!currentContact) {
     return <p>Loading contact...</p>;
@@ -78,6 +105,21 @@ function ContactDetails() {
         contactId={currentContact.contactId}
       />
       <h3>Notes</h3>
+      <button onClick={() => setShowNoteForm(!showNoteForm)}>
+        {showNoteForm ? 'Hide Note Form' : 'Add New Note'}
+      </button>
+      {showNoteForm && (
+        <div className="note-form-container">
+          <AddNewNote
+            noteFormData={noteFormData}
+            handleNoteChange={handleNoteChange}
+          />
+          <button onClick={handleSaveNote} disabled={isSaving}>
+            {isSaving ? 'Saving…' : 'Save Note'}
+          </button>
+        </div>
+      )}
+
       <ul>
         {contactNotes.map((note) => (
           <Note

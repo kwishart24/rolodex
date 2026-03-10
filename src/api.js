@@ -1,12 +1,13 @@
 const contactsUrl = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_CONTACTS_TABLE_NAME}`;
 const notesUrl = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_NOTES_TABLE_NAME}`;
-const token = `Bearer ${import.meta.env.VITE_PAT}`;
+const airtableToken = `Bearer ${import.meta.env.VITE_PAT}`;
 
+//fetching contacts from Airtable
 export const fetchContacts = async () => {
   const options = {
     method: 'GET',
     headers: {
-      Authorization: token,
+      Authorization: airtableToken,
       'Content-Type': 'application/json',
     },
   };
@@ -19,6 +20,7 @@ export const fetchContacts = async () => {
     }
     const data = await resp.json();
 
+    //displaying fetched data for each contact in airtable
     const contacts = data.records
       .map((record) => {
         if (!record.fields.firstName && !record.fields.lastName) {
@@ -33,7 +35,7 @@ export const fetchContacts = async () => {
           email: record.fields.email || '',
           jobTitle: record.fields.jobTitle || '',
           company: record.fields.company || '',
-          headshot: record.fields.headshot?.[0].url || '',
+          headshot: record.fields.headshot?.[0].url || null,
           website: record.fields.website || '',
         };
         return contact;
@@ -47,11 +49,12 @@ export const fetchContacts = async () => {
   }
 };
 
+//fetching notes from Airtable
 export const fetchNotes = async () => {
   const options = {
     method: 'GET',
     headers: {
-      Authorization: token,
+      Authorization: airtableToken,
       'Content-Type': 'application/json',
     },
   };
@@ -85,5 +88,77 @@ export const fetchNotes = async () => {
     return notes;
   } catch {
     console.log('Hello');
+  }
+};
+
+//create new contact in contact form
+export const createContact = async (newContact) => {
+  const options = {
+    method: 'POST',
+    headers: {
+      Authorization: airtableToken,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      fields: {
+        firstName: newContact.firstName,
+        lastName: newContact.lastName,
+        phone: newContact.phone,
+        email: newContact.email,
+        jobTitle: newContact.jobTitle,
+        company: newContact.company,
+        website: newContact.website,
+        headshot: newContact.headshot ? [{ url: newContact.headshot }] : [],
+      },
+    }),
+  };
+
+  try {
+    const resp = await fetch(contactsUrl, options);
+
+    if (!resp.ok) {
+      throw new Error(`Error creating contact: ${resp.statusText}`);
+    }
+
+    const data = await resp.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+//Create new note
+export const createNote = async (newNote) => {
+  const options = {
+    method: 'POST',
+    headers: {
+      Authorization: airtableToken,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      fields: {
+        noteTitle: newNote.noteTitle,
+        noteBody: newNote.noteBody,
+        contactId: [newNote.contactId],
+        createdNoteTime: new Date().toISOString(),
+      },
+    }),
+  };
+
+  try {
+    const resp = await fetch(notesUrl, options);
+
+    if (!resp.ok) {
+      const errorText = await resp.text();
+      console.error('Airtable error:', errorText);
+      throw new Error(`Error creating note: ${resp.statusText}`);
+    }
+
+    const data = await resp.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+    throw error;
   }
 };
