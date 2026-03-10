@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { createContact, createNote } from '../api';
 import { uploadHeadshot } from '../upload';
-import AddNewContact from '../features/contacts/AddNewContact';
+import ContactForm from '../features/contacts/ContactForm';
 import AddNewNote from '../features/notes/AddNewNote';
 
 function NewContactFormPage({
@@ -95,28 +95,14 @@ function NewContactFormPage({
 
   return (
     <div>
-      {isSaving ? (
-        <div className="saving-box">
-          <p>Saving your contact...</p>
-        </div>
-      ) : successMessage ? (
-        <div className="success-box">
-          <p>{successMessage}</p>
-          <button>
-            <a href="/">Return to My Contacts</a>
-          </button>
-          <button>
-            <a href={newContactId}>View New Contact</a>
-          </button>
-        </div>
-      ) : null}
-
       <h2>Add New Contact</h2>
       <form onSubmit={handleSubmit}>
-        <AddNewContact
+        <ContactForm
           contactFormData={contactFormData}
           handleChange={handleChange}
           handleFileChange={handleFileChange}
+          handleCreateContact={handleCreateContact}
+          isSaving={isSaving}
         />
         <h3>Notes</h3>
         <AddNewNote

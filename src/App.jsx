@@ -7,7 +7,7 @@ import ContactsPage from './pages/ContactsPage';
 import AboutPage from './pages/AboutPage';
 import NotFoundPage from './pages/NotFoundPage';
 import ContactDetails from './pages/ContactDetails';
-import NewContactFormPage from './pages/NewContactFormPage';
+import NewContactFormPage from './pages/NewContactPage';
 
 function App() {
   // const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
@@ -31,6 +31,20 @@ function App() {
       ...noteFormData,
       [event.target.name]: event.target.value,
     });
+  };
+
+  //when contact is updated
+  const handleUpdateContact = async (event) => {
+    event.preventDefault();
+    setIsSaving(true);
+
+    try {
+      await updateContact(currentContact.contactId, contactFormData);
+      setEditingMode(null);
+      refreshContacts();
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   // Is loading message

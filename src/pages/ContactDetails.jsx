@@ -4,6 +4,7 @@ import { fetchContacts, fetchNotes, createNote } from '../api.js';
 import ContactInfo from '../features/contacts/ContactInfo.jsx';
 import Note from '../features/notes/Note.jsx';
 import AddNewNote from '../features/notes/AddNewNote.jsx';
+import EditContactForm from '../features/contacts/EditContactForm.jsx';
 
 function ContactDetails({
   noteFormData,
@@ -12,6 +13,9 @@ function ContactDetails({
   isSaving,
   setIsSaving,
   setIsLoading,
+  contactFormData,
+  handleContactChange,
+  handleUpdateContact,
 }) {
   const { contactId } = useParams();
 
@@ -118,6 +122,13 @@ function ContactDetails({
       >
         {editingMode?.type === 'contact' ? 'Cancel' : 'Edit Contact'}
       </button>
+      <EditContactForm
+        isSaving={isSaving}
+        setIsSaving={setIsSaving}
+        contactFormData={contactFormData}
+        handleContactChange={handleContactChange}
+        handleUpdateContact={handleUpdateContact}
+      />
       <h3>Notes</h3>
       <button
         onClick={() => {
@@ -150,6 +161,12 @@ function ContactDetails({
             createdNoteTime={note.createdNoteTime}
             editingMode={editingMode}
             setEditingMode={setEditingMode}
+            isSaving={isSaving}
+            setIsSaving={setIsSaving}
+            noteFormData={noteFormData}
+            handleNoteChange={handleNoteChange}
+            handleUpdateNote={handleUpdateNote}
+            handleSaveNote={handleSaveNote}
           />
         ))}
       </ul>
