@@ -2,12 +2,12 @@ import { useState, useEffect } from 'react';
 import './App.css';
 import { Routes, Route } from 'react-router';
 import NavBar from './shared/NavBar';
-import { fetchContacts, fetchNotes } from './api';
+import { fetchContacts } from './api';
 import ContactsPage from './pages/ContactsPage';
 import AboutPage from './pages/AboutPage';
 import NotFoundPage from './pages/NotFoundPage';
 import ContactDetails from './pages/components/ContactDetails';
-import AddContactForm from './pages/components/AddContactForm';
+import NewContactFormPage from './pages/NewContactFormPage';
 
 function App() {
   // const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
@@ -51,7 +51,7 @@ function App() {
         ></Route>
         <Route path="/about" element={<AboutPage />}></Route>
         <Route path="/:contactId" element={<ContactDetails />}></Route>
-        <Route path="/addContact" element={<AddContactForm />}></Route>
+        <Route path="/addContact" element={<NewContactFormPage />}></Route>
         <Route path="*" element={<NotFoundPage />}></Route>
       </Routes>
     </div>

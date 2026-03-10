@@ -1,8 +1,10 @@
 import { useState } from 'react';
-import { createContact, createNote } from '../../api';
-import { uploadHeadshot } from '../../upload';
+import { createContact, createNote } from '../api';
+import { uploadHeadshot } from '../upload';
+import AddNewContact from './components/AddNewContact';
+import AddNewNote from './components/AddNewNote';
 
-function AddContactForm() {
+function NewContactFormPage() {
   const [headshotFile, setHeadshotFile] = useState(null);
 
   const [contactFormData, setContactFormData] = useState({
@@ -118,111 +120,18 @@ function AddContactForm() {
         </div>
       ) : null}
 
-      {/* {successMessage && (
-        <div>
-          <p className="success">{successMessage}</p>
-          <button>
-            <a href="/">Return to My Contacts</a>
-          </button>
-          <button>
-            <a href={newContactId}>View New Contact</a>
-          </button>
-        </div>
-      )} */}
-
       <h2>Add New Contact</h2>
       <form onSubmit={handleSubmit}>
-        <label htmlFor="headshot">Headshot:</label>
-        <input
-          type="file"
-          id="headshot"
-          name="headshot"
-          accept="image/png, image/jpeg"
-          onChange={handleFileChange}
+        <AddNewContact
+          contactFormData={contactFormData}
+          handleChange={handleChange}
+          handleFileChange={handleFileChange}
         />
-
-        <label htmlFor="firstName">First Name:</label>
-        <input
-          type="text"
-          id="firstName"
-          name="firstName"
-          value={contactFormData.firstName}
-          onChange={handleChange}
-        />
-
-        <label htmlFor="lastName">Last Name:</label>
-        <input
-          type="text"
-          id="lastName"
-          name="lastName"
-          value={contactFormData.lastName}
-          onChange={handleChange}
-        />
-
-        <label htmlFor="phone">Phone #:</label>
-        <input
-          type="tel"
-          id="phone"
-          name="phone"
-          value={contactFormData.phone}
-          onChange={handleChange}
-        />
-
-        <label htmlFor="email">Email:</label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          value={contactFormData.email}
-          onChange={handleChange}
-        />
-
-        <label htmlFor="jobTitle">Job Title:</label>
-        <input
-          type="text"
-          id="jobTitle"
-          name="jobTitle"
-          value={contactFormData.jobTitle}
-          onChange={handleChange}
-        />
-
-        <label htmlFor="company">Company:</label>
-        <input
-          type="text"
-          id="company"
-          name="company"
-          value={contactFormData.company}
-          onChange={handleChange}
-        />
-
-        <label htmlFor="website">Website:</label>
-        <input
-          type="url"
-          id="website"
-          name="website"
-          value={contactFormData.website}
-          onChange={handleChange}
-        />
-
         <h3>Notes</h3>
-
-        <label htmlFor="noteTitle">Note Title:</label>
-        <input
-          type="text"
-          id="noteTitle"
-          name="noteTitle"
-          value={noteFormData.noteTitle}
-          onChange={handleNoteChange}
-        ></input>
-
-        <label htmlFor="noteBody">Note Body:</label>
-        <textarea
-          id="noteBody"
-          name="noteBody"
-          value={noteFormData.noteBody}
-          onChange={handleNoteChange}
-        ></textarea>
-
+        <AddNewNote
+          noteFormData={noteFormData}
+          handleNoteChange={handleNoteChange}
+        />
         <button type="submit" disabled={isSaving}>
           {isSaving ? 'Saving...' : 'Save'}
         </button>
@@ -231,4 +140,4 @@ function AddContactForm() {
   );
 }
 
-export default AddContactForm;
+export default NewContactFormPage;
