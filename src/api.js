@@ -127,3 +127,38 @@ export const createContact = async (newContact) => {
     throw error;
   }
 };
+
+//Create new note
+export const createNote = async (newNote) => {
+  const options = {
+    method: 'POST',
+    headers: {
+      Authorization: airtableToken,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      fields: {
+        noteTitle: newNote.noteTitle,
+        noteBody: newNote.noteBody,
+        contactId: [newNote.contactId],
+        createdNoteTime: new Date().toISOString(),
+      },
+    }),
+  };
+
+  try {
+    const resp = await fetch(notesUrl, options);
+
+    if (!resp.ok) {
+      const errorText = await resp.text();
+      console.error('Airtable error:', errorText);
+      throw new Error(`Error creating note: ${resp.statusText}`);
+    }
+
+    const data = await resp.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};

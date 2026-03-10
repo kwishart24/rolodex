@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { createContact } from '../../api';
+import { createContact, createNote } from '../../api';
 import { uploadHeadshot } from '../../upload';
 
 function AddContactForm() {
@@ -19,6 +19,14 @@ function AddContactForm() {
 
   const [successMessage, setSuccessMessage] = useState('');
 
+  const [noteFormData, setNoteFormData] = useState({
+    noteTitle: '',
+    noteBody: '',
+  });
+
+  //Saving
+  const [isSaving, setIsSaving] = useState(false);
+
   const handleChange = (event) => {
     setContactFormData({
       ...contactFormData,
@@ -30,42 +38,87 @@ function AddContactForm() {
     setHeadshotFile(event.target.files[0]);
   };
 
+  const handleNoteChange = (event) => {
+    setNoteFormData({
+      ...noteFormData,
+      [event.target.name]: event.target.value,
+    });
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setIsSaving(true);
+    setSuccessMessage('');
 
-    let headshotUrl = '';
+    try {
+      let headshotUrl = '';
 
-    if (headshotFile) {
-      headshotUrl = await uploadHeadshot(headshotFile);
+      if (headshotFile) {
+        headshotUrl = await uploadHeadshot(headshotFile);
+      }
+
+      //Create the contact
+      const createdContact = await createContact({
+        ...contactFormData,
+        headshot: headshotUrl,
+      });
+
+      //Create the note
+      if (noteFormData.noteTitle || noteFormData.noteBody) {
+        await createNote({
+          ...noteFormData,
+          contactId: createdContact.id,
+          createdNoteTime: noteFormData.createdNoteTime,
+        });
+      }
+
+      //capture new contact id so user can navigate to it once its created
+      setNewContactId(createdContact.id);
+
+      //clear form data and notes section
+      setContactFormData({
+        firstName: '',
+        lastName: '',
+        phone: '',
+        email: '',
+        jobTitle: '',
+        company: '',
+        website: '',
+      });
+
+      setNoteFormData({
+        noteTitle: '',
+        noteBody: '',
+      });
+
+      setHeadshotFile(null);
+
+      //Show success message
+      setSuccessMessage('Your new contact has been created!');
+    } finally {
+      setIsSaving(false);
     }
-
-    const createdContact = await createContact({
-      ...contactFormData,
-      headshot: headshotUrl,
-    });
-    console.log('New contact created:', createdContact);
-    console.log('Cloudinary URL:', headshotUrl);
-
-    setNewContactId(createdContact.id);
-
-    setContactFormData({
-      firstName: '',
-      lastName: '',
-      phone: '',
-      email: '',
-      jobTitle: '',
-      company: '',
-      website: '',
-    });
-
-    setHeadshotFile(null);
-
-    setSuccessMessage('Your new contact has been created!');
   };
 
   return (
     <div>
-      {successMessage && (
+      {isSaving ? (
+        <div className="saving-box">
+          <p>Saving your contact...</p>
+        </div>
+      ) : successMessage ? (
+        <div className="success-box">
+          <p>{successMessage}</p>
+          <button>
+            <a href="/">Return to My Contacts</a>
+          </button>
+          <button>
+            <a href={newContactId}>View New Contact</a>
+          </button>
+        </div>
+      ) : null}
+
+      {/* {successMessage && (
         <div>
           <p className="success">{successMessage}</p>
           <button>
@@ -75,7 +128,9 @@ function AddContactForm() {
             <a href={newContactId}>View New Contact</a>
           </button>
         </div>
-      )}
+      )} */}
+
+      <h2>Add New Contact</h2>
       <form onSubmit={handleSubmit}>
         <label htmlFor="headshot">Headshot:</label>
         <input
@@ -149,7 +204,28 @@ function AddContactForm() {
           onChange={handleChange}
         />
 
-        <button type="submit">Save</button>
+        <h3>Notes</h3>
+
+        <label htmlFor="noteTitle">Note Title:</label>
+        <input
+          type="text"
+          id="noteTitle"
+          name="noteTitle"
+          value={noteFormData.noteTitle}
+          onChange={handleNoteChange}
+        ></input>
+
+        <label htmlFor="noteBody">Note Body:</label>
+        <textarea
+          id="noteBody"
+          name="noteBody"
+          value={noteFormData.noteBody}
+          onChange={handleNoteChange}
+        ></textarea>
+
+        <button type="submit" disabled={isSaving}>
+          {isSaving ? 'Saving...' : 'Save'}
+        </button>
       </form>
     </div>
   );
