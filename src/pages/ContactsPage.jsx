@@ -1,4 +1,8 @@
-function ContactsPage({ contactList }) {
+function ContactsPage({ contactList, isLoading }) {
+  if (isLoading) {
+    return <p>Loading contacts...</p>;
+  }
+
   return (
     <>
       <h1>My Contacts</h1>

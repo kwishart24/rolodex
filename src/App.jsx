@@ -6,7 +6,7 @@ import { fetchContacts } from './api';
 import ContactsPage from './pages/ContactsPage';
 import AboutPage from './pages/AboutPage';
 import NotFoundPage from './pages/NotFoundPage';
-import ContactDetails from './pages/components/ContactDetails';
+import ContactDetails from './pages/ContactDetails';
 import NewContactFormPage from './pages/NewContactFormPage';
 
 function App() {
@@ -61,7 +61,13 @@ function App() {
       <Routes>
         <Route
           path="/"
-          element={<ContactsPage contactList={contactList} />}
+          element={
+            <ContactsPage
+              contactList={contactList}
+              isLoading={isLoading}
+              setIsLoading={setIsLoading}
+            />
+          }
         ></Route>
         <Route path="/about" element={<AboutPage />}></Route>
         <Route
@@ -73,6 +79,8 @@ function App() {
               setNoteFormData={setNoteFormData}
               isSaving={isSaving}
               setIsSaving={setIsSaving}
+              isLoading={isLoading}
+              setIsLoading={setIsLoading}
             />
           }
         ></Route>

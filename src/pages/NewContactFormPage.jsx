@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { createContact, createNote } from '../api';
 import { uploadHeadshot } from '../upload';
-import AddNewContact from './components/AddNewContact';
-import AddNewNote from './components/AddNewNote';
+import AddNewContact from '../features/contacts/AddNewContact';
+import AddNewNote from '../features/notes/AddNewNote';
 
 function NewContactFormPage({
   noteFormData,

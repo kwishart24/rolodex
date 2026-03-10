@@ -162,3 +162,65 @@ export const createNote = async (newNote) => {
     throw error;
   }
 };
+
+//update contact
+export const updateContact = async (contactId, fields) => {
+  const recordUrl = `${contactsUrl}/${contactId}`;
+  const options = {
+    method: 'PATCH',
+    headers: {
+      Authorization: airtableToken,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      fields,
+    }),
+  };
+
+  try {
+    const resp = await fetch(recordUrl, options);
+
+    if (!resp.ok) {
+      const errorText = await resp.text();
+      console.error('Airtable error:', errorText);
+      throw new Error(`Error updating contact: ${resp.statusText}`);
+    }
+
+    const data = await resp.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+//update notes
+export const updateNote = async (noteId, fields) => {
+  const noteUrl = `${notesUrl}/${noteId}`;
+  const options = {
+    method: 'PATCH',
+    headers: {
+      Authorization: airtableToken,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      fields,
+    }),
+  };
+
+  try {
+    const resp = await fetch(noteUrl, options);
+
+    if (!resp.ok) {
+      const errorText = await resp.text();
+      console.error('Airtable error:', errorText);
+      throw new Error(`Error updating note: ${resp.statusText}`);
+    }
+
+    const data = await resp.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};

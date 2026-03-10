@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router';
-import { fetchContacts, fetchNotes, createNote } from '../../api';
-import ContactInfo from './ContactInfo.jsx';
-import Note from './Note.jsx';
-import AddNewNote from './AddNewNote.jsx';
+import { fetchContacts, fetchNotes, createNote } from '../api.js';
+import ContactInfo from '../features/contacts/ContactInfo.jsx';
+import Note from '../features/notes/Note.jsx';
+import AddNewNote from '../features/notes/AddNewNote.jsx';
 
 function ContactDetails({
   noteFormData,
@@ -11,6 +11,7 @@ function ContactDetails({
   setNoteFormData,
   isSaving,
   setIsSaving,
+  setIsLoading,
 }) {
   const { contactId } = useParams();
 
@@ -32,11 +33,14 @@ function ContactDetails({
         contactId: currentContact.contactId,
       });
 
-      // ⬇️ THIS IS WHERE YOU RESET THE FORM
+      // THIS IS WHERE YOU RESET THE FORM
       setNoteFormData({ noteTitle: '', noteBody: '' });
 
       // optional: close the form
       setShowNoteForm(false);
+
+      //editing mode back to null
+      setEditingMode(null);
 
       // optional: refresh notes
       fetchNotes().then(setNotesList);
@@ -45,11 +49,11 @@ function ContactDetails({
     }
   };
 
-  // Is loading message
-  const [isLoading, setIsLoading] = useState(false);
-
   // Error Message
   const [errorMessage, setErrorMessage] = useState('');
+
+  //Editing for either notes or contacts. values include null, {type: "contact"}, and {type: "note", id: noteId}
+  const [editingMode, setEditingMode] = useState(null);
 
   useEffect(() => {
     setIsLoading(true);
@@ -104,8 +108,24 @@ function ContactDetails({
         phone={currentContact.phone}
         contactId={currentContact.contactId}
       />
+      <button
+        onClick={() =>
+          setEditingMode(
+            editingMode?.type === 'contact' ? null : { type: 'contact' }
+          )
+        }
+        disabled={editingMode?.type === 'note'}
+      >
+        {editingMode?.type === 'contact' ? 'Cancel' : 'Edit Contact'}
+      </button>
       <h3>Notes</h3>
-      <button onClick={() => setShowNoteForm(!showNoteForm)}>
+      <button
+        onClick={() => {
+          if (editingMode?.type === 'contact') return;
+          setShowNoteForm(!showNoteForm);
+        }}
+        disabled={editingMode?.type === 'contact'}
+      >
         {showNoteForm ? 'Hide Note Form' : 'Add New Note'}
       </button>
       {showNoteForm && (
@@ -128,6 +148,8 @@ function ContactDetails({
             noteBody={note.noteBody}
             noteId={note.noteId}
             createdNoteTime={note.createdNoteTime}
+            editingMode={editingMode}
+            setEditingMode={setEditingMode}
           />
         ))}
       </ul>
