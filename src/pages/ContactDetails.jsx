@@ -12,6 +12,7 @@ function ContactDetails({
   noteFormData,
   handleNoteChange,
   setNoteFormData,
+  isLoading,
   isSaving,
   setIsSaving,
   setIsLoading,
@@ -27,7 +28,6 @@ function ContactDetails({
   setErrorMessage,
 }) {
   const { contactId } = useParams();
-  const contact = contactList.find((c) => c.contactId === contactId);
 
   //NotesList
   const [notesList, setNotesList] = useState([]);
@@ -162,11 +162,14 @@ function ContactDetails({
     }
   }, [editingMode]);
 
-  if (!contact) {
-    return <NotFoundPage />;
-  }
-  if (!currentContact) {
+  // 1. Contacts haven't loaded yet
+  if (contactList.length === 0 && isLoading) {
     return <p>Loading contact...</p>;
+  }
+
+  // 2. Contacts finished loading, but no match
+  if (!currentContact && !isLoading) {
+    return <NotFoundPage />;
   }
 
   if (!contactNotes) {
