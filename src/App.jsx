@@ -90,7 +90,6 @@ function App() {
       .then((contacts) => {
         setContactList(contacts);
         setIsLoading(false);
-        //console.log(contactList);
       })
       .catch((error) => console.log(error));
   }, []);
@@ -130,6 +129,8 @@ function App() {
               headshotFile={headshotFile}
               setHeadshotFile={setHeadshotFile}
               handleFileChange={handleFileChange}
+              errorMessage={errorMessage}
+              setErrorMessage={setErrorMessage}
             />
           }
         ></Route>
@@ -149,6 +150,8 @@ function App() {
               headshotFile={headshotFile}
               setHeadshotFile={setHeadshotFile}
               handleFileChange={handleFileChange}
+              errorMessage={errorMessage}
+              setErrorMessage={setErrorMessage}
             />
           }
         ></Route>

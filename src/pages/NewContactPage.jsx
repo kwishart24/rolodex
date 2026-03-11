@@ -17,6 +17,8 @@ function NewContactFormPage({
   headshotFile,
   setHeadshotFile,
   handleFileChange,
+  errorMessage,
+  setErrorMessage,
 }) {
   const [successMessage, setSuccessMessage] = useState('');
 
@@ -25,6 +27,14 @@ function NewContactFormPage({
   const handleCreateContact = async (e) => {
     e.preventDefault();
     setIsSaving(true);
+    setErrorMessage('');
+
+    //validation requires first or last name
+    if (!contactFormData.firstName.trim() && !contactFormData.lastName.trim()) {
+      setErrorMessage('Please enter at least a first name or a last name.');
+      setIsSaving(false);
+      return;
+    }
 
     try {
       let headshotUrl = '';
@@ -80,58 +90,6 @@ function NewContactFormPage({
     }
   };
 
-  // const handleSubmit = async (event) => {
-  //   event.preventDefault();
-  //   setIsSaving(true);
-  //   setSuccessMessage('');
-
-  //   try {
-  //     let headshotUrl = '';
-
-  //     if (headshotFile) {
-  //       headshotUrl = await uploadHeadshot(headshotFile);
-  //     }
-
-  //     //Create the contact
-  //     const createdContact = await createContact({
-  //       ...contactFormData,
-  //       headshot: headshotUrl,
-  //     });
-
-  //     //Create the note
-  //     if (noteFormData.noteTitle || noteFormData.noteBody) {
-  //       await createNote({
-  //         ...noteFormData,
-  //         contactId: createdContact.id,
-  //         createdNoteTime: noteFormData.createdNoteTime,
-  //       });
-  //     }
-
-  //     //clear form data and notes section
-  //     setContactFormData({
-  //       firstName: '',
-  //       lastName: '',
-  //       phone: '',
-  //       email: '',
-  //       jobTitle: '',
-  //       company: '',
-  //       website: '',
-  //     });
-
-  //     setNoteFormData({
-  //       noteTitle: '',
-  //       noteBody: '',
-  //     });
-
-  //     setHeadshotFile(null);
-
-  //     //Show success message
-  //     setSuccessMessage('Your new contact has been created!');
-  //   } finally {
-  //     setIsSaving(false);
-  //   }
-  // };
-
   return (
     <div className="new-contact-page">
       <h2>Add New Contact</h2>
@@ -155,6 +113,7 @@ function NewContactFormPage({
           isSaving={isSaving}
           successMessage={successMessage}
           newContactId={newContactId}
+          errorMessage={errorMessage}
         />
 
         <h3>Notes</h3>
