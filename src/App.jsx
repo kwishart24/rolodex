@@ -2,12 +2,12 @@ import { useState, useEffect } from 'react';
 import './App.css';
 import { Routes, Route } from 'react-router';
 import NavBar from './shared/NavBar';
-import { fetchContacts } from './api';
+import { fetchContacts, updateContact, createContact } from './api';
 import ContactsPage from './pages/ContactsPage';
 import AboutPage from './pages/AboutPage';
 import NotFoundPage from './pages/NotFoundPage';
-import ContactDetails from './pages/components/ContactDetails';
-import NewContactFormPage from './pages/NewContactFormPage';
+import ContactDetails from './pages/ContactDetails';
+import NewContactFormPage from './pages/NewContactPage';
 
 function App() {
   // const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
@@ -16,8 +16,48 @@ function App() {
   //ContactList
   const [contactList, setContactList] = useState([]);
 
-  //NotesList
-  const [notesList, setNotesList] = useState([]);
+  //creating new contacts
+  const [contactFormData, setContactFormData] = useState({
+    firstName: '',
+    lastName: '',
+    phone: '',
+    email: '',
+    jobTitle: '',
+    company: '',
+    website: '',
+  });
+
+  //headshot file state
+  const [headshotFile, setHeadshotFile] = useState(null);
+
+  const handleFileChange = (e) => {
+    setHeadshotFile(e.target.files[0]);
+  };
+
+  const createContactInAirtable = async (newContactData) => {
+    const createdContact = await createContact(newContactData); // your API call
+
+    const updatedContacts = await fetchContacts();
+    setContactList(updatedContacts);
+
+    return createdContact; // so NewContactPage can redirect to it
+  };
+
+  //update contact in airtable
+  const updateContactInAirtable = async (contactId, updatedData) => {
+    await updateContact(contactId, updatedData);
+
+    const updatedContacts = await fetchContacts();
+    setContactList(updatedContacts);
+  };
+
+  //when contact is changed for form input
+  const handleContactChange = (event) => {
+    setContactFormData({
+      ...contactFormData,
+      [event.target.name]: event.target.value,
+    });
+  };
 
   //creating new notes
   const [noteFormData, setNoteFormData] = useState({
@@ -25,7 +65,7 @@ function App() {
     noteBody: '',
   });
 
-  //when new note is saved
+  //when note is changed, change handler
   const handleNoteChange = (event) => {
     setNoteFormData({
       ...noteFormData,
@@ -61,7 +101,13 @@ function App() {
       <Routes>
         <Route
           path="/"
-          element={<ContactsPage contactList={contactList} />}
+          element={
+            <ContactsPage
+              contactList={contactList}
+              isLoading={isLoading}
+              setIsLoading={setIsLoading}
+            />
+          }
         ></Route>
         <Route path="/about" element={<AboutPage />}></Route>
         <Route
@@ -73,6 +119,16 @@ function App() {
               setNoteFormData={setNoteFormData}
               isSaving={isSaving}
               setIsSaving={setIsSaving}
+              isLoading={isLoading}
+              setIsLoading={setIsLoading}
+              contactFormData={contactFormData}
+              setContactFormData={setContactFormData}
+              handleContactChange={handleContactChange}
+              updateContactInAirtable={updateContactInAirtable}
+              contactList={contactList}
+              headshotFile={headshotFile}
+              setHeadshotFile={setHeadshotFile}
+              handleFileChange={handleFileChange}
             />
           }
         ></Route>
@@ -85,6 +141,13 @@ function App() {
               setNoteFormData={setNoteFormData}
               isSaving={isSaving}
               setIsSaving={setIsSaving}
+              contactFormData={contactFormData}
+              setContactFormData={setContactFormData}
+              handleContactChange={handleContactChange}
+              createContactInAirtable={createContactInAirtable}
+              headshotFile={headshotFile}
+              setHeadshotFile={setHeadshotFile}
+              handleFileChange={handleFileChange}
             />
           }
         ></Route>
