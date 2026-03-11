@@ -1,12 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router';
-import {
-  fetchContacts,
-  fetchNotes,
-  createNote,
-  updateContact,
-  updateNote,
-} from '../api.js';
+import { fetchNotes, createNote, updateNote } from '../api.js';
 import ContactInfo from '../features/contacts/ContactInfo.jsx';
 import Note from '../features/notes/Note.jsx';
 import NoteForm from '../features/notes/NoteForm.jsx';
@@ -28,6 +22,8 @@ function ContactDetails({
   updateContactInAirtable,
   headshotFile,
   setHeadshotFile,
+  errorMessage,
+  setErrorMessage,
 }) {
   const { contactId } = useParams();
 
@@ -66,6 +62,14 @@ function ContactDetails({
   const handleUpdateContact = async (e) => {
     e.preventDefault();
     setIsSaving(true);
+    setErrorMessage('');
+
+    // Validation: require first OR last name
+    if (!contactFormData.firstName.trim() && !contactFormData.lastName.trim()) {
+      setErrorMessage('Please enter at least a first name or a last name.');
+      setIsSaving(false);
+      return;
+    }
 
     try {
       let headshotUrl = currentContact.headshot;
@@ -112,9 +116,6 @@ function ContactDetails({
       setIsSaving(false);
     }
   };
-
-  // Error Message
-  const [errorMessage, setErrorMessage] = useState('');
 
   //Editing for either notes or contacts. values include null, {type: "contact"}, and {type: "note", id: noteId}
   const [editingMode, setEditingMode] = useState(null);
@@ -184,6 +185,7 @@ function ContactDetails({
         phone={currentContact.phone}
         contactId={currentContact.contactId}
       />
+
       <button
         onClick={() =>
           setEditingMode(
@@ -204,6 +206,7 @@ function ContactDetails({
             contactFormData={contactFormData}
             handleContactChange={handleContactChange}
             handleFileChange={handleFileChange}
+            errorMessage={errorMessage}
           />
           <button onClick={handleUpdateContact} disabled={isSaving}>
             {isSaving ? 'Saving…' : 'Save Changes'}
