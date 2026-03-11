@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import './App.css';
 import { Routes, Route } from 'react-router';
 import NavBar from './shared/NavBar';
-import { fetchContacts } from './api';
+import { fetchContacts, updateContact } from './api';
 import ContactsPage from './pages/ContactsPage';
 import AboutPage from './pages/AboutPage';
 import NotFoundPage from './pages/NotFoundPage';
@@ -16,13 +16,32 @@ function App() {
   //ContactList
   const [contactList, setContactList] = useState([]);
 
+  //creating new contacts
+  const [contactFormData, setContactFormData] = useState({
+    firstName: '',
+    lastName: '',
+    phone: '',
+    email: '',
+    jobTitle: '',
+    company: '',
+    website: '',
+  });
+
+  //when contact is changed for form input
+  const handleContactChange = (event) => {
+    setContactFormData({
+      ...contactFormData,
+      [event.target.name]: event.target.value,
+    });
+  };
+
   //creating new notes
   const [noteFormData, setNoteFormData] = useState({
     noteTitle: '',
     noteBody: '',
   });
 
-  //when new note is saved
+  //when note is changed, change handler
   const handleNoteChange = (event) => {
     setNoteFormData({
       ...noteFormData,
@@ -78,6 +97,9 @@ function App() {
               setIsSaving={setIsSaving}
               isLoading={isLoading}
               setIsLoading={setIsLoading}
+              contactFormData={contactFormData}
+              setContactFormData={setContactFormData}
+              handleContactChange={handleContactChange}
             />
           }
         ></Route>
@@ -90,6 +112,9 @@ function App() {
               setNoteFormData={setNoteFormData}
               isSaving={isSaving}
               setIsSaving={setIsSaving}
+              contactFormData={contactFormData}
+              setContactFormData={setContactFormData}
+              handleContactChange={handleContactChange}
             />
           }
         ></Route>

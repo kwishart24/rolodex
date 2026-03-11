@@ -1,36 +1,6 @@
-function ContactForm({
-  contactFormData,
-  handleContactChange,
-  // isSaving,
-  // handleFileChange,
-  // successMessage,
-  // newContactId,
-}) {
+function ContactForm({ contactFormData, handleContactChange }) {
   return (
     <div className="contact-form-fields">
-      {/* {isSaving ? (
-        <div className="saving-box">
-          <p>Saving your contact...</p>
-        </div>
-      ) : successMessage ? (
-        <div className="success-box">
-          <p>{successMessage}</p>
-          <button>
-            <a href="/">Return to My Contacts</a>
-          </button>
-          <button>
-            <a href={newContactId}>View New Contact</a>
-          </button>
-        </div>
-      ) : null}
-      <label htmlFor="headshot">Headshot:</label>
-      <input
-        type="file"
-        id="headshot"
-        name="headshot"
-        accept="image/png, image/jpeg"
-        onChange={handleFileChange}
-      /> */}
       <label htmlFor="firstName">First Name:</label>
       <input
         type="text"

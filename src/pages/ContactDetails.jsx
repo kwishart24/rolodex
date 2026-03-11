@@ -22,8 +22,6 @@ function ContactDetails({
   contactFormData,
   handleContactChange,
   handleFileChange,
-  successMessage,
-  newContactId,
 }) {
   const { contactId } = useParams();
 
@@ -61,17 +59,13 @@ function ContactDetails({
     }
   };
 
-  //updating contact info
-  const handleUpdateContact = async (event) => {
-    event.preventDefault();
+  //submit handler for saving contact
+  const handleUpdateContact = async (e) => {
+    e.preventDefault();
     setIsSaving(true);
 
     try {
       await updateContact(currentContact.contactId, contactFormData);
-
-      const updatedContacts = await fetchContacts();
-      setContactList(updatedContacts);
-
       setEditingMode(null);
     } finally {
       setIsSaving(false);
@@ -154,6 +148,9 @@ function ContactDetails({
     return <p>Add a note!</p>;
   }
 
+  const isEditingThisContact =
+    editingMode?.type === 'contact' && editingMode?.id === contactId;
+
   return (
     <div className="currentContact">
       <ContactInfo
@@ -171,31 +168,28 @@ function ContactDetails({
       <button
         onClick={() =>
           setEditingMode(
-            editingMode?.type === 'contact' ? null : { type: 'contact' }
+            isEditingThisContact ? null : { type: 'contact', id: contactId }
           )
         }
         disabled={editingMode?.type === 'note'}
       >
-        {editingMode?.type === 'contact' ? 'Cancel' : 'Edit Contact'}
+        {isEditingThisContact ? 'Cancel' : 'Edit Contact'}
       </button>
 
       {/* Contact edit form */}
-      {editingMode?.type === 'contact' && (
-        <>
+      {isEditingThisContact && (
+        <div className="contact-edit-form">
           <ContactForm
             isSaving={isSaving}
             setIsSaving={setIsSaving}
             contactFormData={contactFormData}
             handleContactChange={handleContactChange}
-            handleUpdateContact={handleUpdateContact}
             handleFileChange={handleFileChange}
-            successMessage={null}
-            newContactId={null}
           />
           <button onClick={handleUpdateContact} disabled={isSaving}>
             {isSaving ? 'Saving…' : 'Save Changes'}
           </button>
-        </>
+        </div>
       )}
 
       <h3>Notes</h3>
