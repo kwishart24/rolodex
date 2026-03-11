@@ -27,6 +27,14 @@ function App() {
     website: '',
   });
 
+  //update contact in airtable
+  const updateContactInAirtable = async (contactId, updatedData) => {
+    await updateContact(contactId, updatedData);
+
+    const updatedContacts = await fetchContacts();
+    setContactList(updatedContacts);
+  };
+
   //when contact is changed for form input
   const handleContactChange = (event) => {
     setContactFormData({
@@ -100,6 +108,8 @@ function App() {
               contactFormData={contactFormData}
               setContactFormData={setContactFormData}
               handleContactChange={handleContactChange}
+              updateContactInAirtable={updateContactInAirtable}
+              contactList={contactList}
             />
           }
         ></Route>

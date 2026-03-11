@@ -20,13 +20,13 @@ function ContactDetails({
   setIsSaving,
   setIsLoading,
   contactFormData,
+  setContactFormData,
   handleContactChange,
   handleFileChange,
+  contactList,
+  updateContactInAirtable,
 }) {
   const { contactId } = useParams();
-
-  //ContactList
-  const [contactList, setContactList] = useState([]);
 
   //NotesList
   const [notesList, setNotesList] = useState([]);
@@ -65,7 +65,7 @@ function ContactDetails({
     setIsSaving(true);
 
     try {
-      await updateContact(currentContact.contactId, contactFormData);
+      await updateContactInAirtable(currentContact.contactId, contactFormData);
       setEditingMode(null);
     } finally {
       setIsSaving(false);
@@ -102,19 +102,6 @@ function ContactDetails({
   //Editing for either notes or contacts. values include null, {type: "contact"}, and {type: "note", id: noteId}
   const [editingMode, setEditingMode] = useState(null);
 
-  //fetching contacts
-  useEffect(() => {
-    setIsLoading(true);
-
-    fetchContacts()
-      .then((contacts) => {
-        setContactList(contacts);
-        setIsLoading(false);
-        //console.log(contacts);
-      })
-      .catch((error) => console.log(error));
-  }, []);
-
   //get contact info for current contact
   const currentContact = contactList.find((c) => c.contactId === contactId);
 
@@ -132,6 +119,21 @@ function ContactDetails({
 
   //get notes for current contact from notes array
   const contactNotes = notesList.filter((note) => note.contactId === contactId);
+
+  //preload form when entering edit mode
+  useEffect(() => {
+    if (editingMode?.type === 'contact' && currentContact) {
+      setContactFormData({
+        firstName: currentContact.firstName || '',
+        lastName: currentContact.lastName || '',
+        phone: currentContact.phone || '',
+        email: currentContact.email || '',
+        jobTitle: currentContact.jobTitle || '',
+        company: currentContact.company || '',
+        website: currentContact.website || '',
+      });
+    }
+  }, [editingMode, currentContact, setContactFormData]);
 
   //add new note closes when user clicks to edit individual note
   useEffect(() => {
