@@ -29,10 +29,6 @@ function ContactDetails({
   const { contactId } = useParams();
   const contact = contactList.find((c) => c.contactId === contactId);
 
-  if (!contact) {
-    return <NotFoundPage />;
-  }
-
   //NotesList
   const [notesList, setNotesList] = useState([]);
 
@@ -166,6 +162,9 @@ function ContactDetails({
     }
   }, [editingMode]);
 
+  if (!contact) {
+    return <NotFoundPage />;
+  }
   if (!currentContact) {
     return <p>Loading contact...</p>;
   }

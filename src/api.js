@@ -2,8 +2,6 @@ const contactsUrl = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}
 const notesUrl = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_NOTES_TABLE_NAME}`;
 const airtableToken = `Bearer ${import.meta.env.VITE_PAT}`;
 
-
-
 //fetching contacts from Airtable
 export const fetchContacts = async () => {
   const options = {
@@ -110,7 +108,7 @@ export const createContact = async (newContact) => {
         jobTitle: newContact.jobTitle,
         company: newContact.company,
         website: newContact.website,
-        headshot: newContact.headshot ? [{ url: newContact.headshot }] : [],
+        headshot: newContact.headshot || [],
       },
     }),
   };
