@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import './App.css';
-import { Routes, Route } from 'react-router';
-import NavBar from './shared/NavBar';
+import { Routes, Route, useLocation } from 'react-router';
 import { fetchContacts, updateContact, createContact } from './api';
+import Header from './shared/Header';
 import ContactsPage from './pages/ContactsPage';
 import AboutPage from './pages/AboutPage';
 import NotFoundPage from './pages/NotFoundPage';
@@ -13,6 +13,30 @@ import Footer from './shared/Footer';
 function App() {
   // const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
   // const token = `Bearer ${import.meta.env.VITE_PAT}`;
+  const [sortField, setSortField] = useState('createdTime');
+  const [sortDirection, setSortDirection] = useState('desc');
+  const [queryString, setQueryString] = useState('');
+
+  const location = useLocation();
+
+  const [title, setTitle] = useState('');
+
+  useEffect(() => {
+    const path = location.pathname;
+
+    if (path === '/') {
+      setTitle('My Contacts');
+    } else if (path === '/about') {
+      setTitle('About');
+    } else if (path === '/addcontact') {
+      setTitle('Add New Contact');
+    } else if (path.startsWith('/') && path.split('/').length === 2) {
+      // Matches "/12345" or "/abcde"
+      setTitle('Contact Details');
+    } else {
+      setTitle('Not Found');
+    }
+  }, [location.pathname]);
 
   //ContactList
   const [contactList, setContactList] = useState([]);
@@ -96,8 +120,7 @@ function App() {
 
   return (
     <div>
-      <NavBar />
-      <h1>Rolodex</h1>
+      <Header title={title} />
       <Routes>
         <Route
           path="/"
@@ -106,6 +129,12 @@ function App() {
               contactList={contactList}
               isLoading={isLoading}
               setIsLoading={setIsLoading}
+              sortField={sortField}
+              setSortField={setSortField}
+              sortDirection={sortDirection}
+              setSortDirection={setSortDirection}
+              queryString={queryString}
+              setQueryString={setQueryString}
             />
           }
         ></Route>
