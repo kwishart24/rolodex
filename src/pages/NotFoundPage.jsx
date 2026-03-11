@@ -1,4 +1,4 @@
-function ContactsPage() {
+function NotFoundPage() {
   return (
     <>
       <h3>Sorry, this contact could not be found.</h3>
@@ -9,4 +9,4 @@ function ContactsPage() {
   );
 }
 
-export default ContactsPage;
+export default NotFoundPage;
