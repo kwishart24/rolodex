@@ -1,14 +1,14 @@
 function ContactForm({
   contactFormData,
   handleContactChange,
-  isSaving,
-  handleFileChange,
-  successMessage,
-  newContactId,
+  // isSaving,
+  // handleFileChange,
+  // successMessage,
+  // newContactId,
 }) {
   return (
     <div className="contact-form-fields">
-      {isSaving ? (
+      {/* {isSaving ? (
         <div className="saving-box">
           <p>Saving your contact...</p>
         </div>
@@ -30,8 +30,7 @@ function ContactForm({
         name="headshot"
         accept="image/png, image/jpeg"
         onChange={handleFileChange}
-      />
-
+      /> */}
       <label htmlFor="firstName">First Name:</label>
       <input
         type="text"

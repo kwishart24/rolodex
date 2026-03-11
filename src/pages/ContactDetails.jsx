@@ -108,6 +108,7 @@ function ContactDetails({
   //Editing for either notes or contacts. values include null, {type: "contact"}, and {type: "note", id: noteId}
   const [editingMode, setEditingMode] = useState(null);
 
+  //fetching contacts
   useEffect(() => {
     setIsLoading(true);
 
@@ -173,11 +174,12 @@ function ContactDetails({
             editingMode?.type === 'contact' ? null : { type: 'contact' }
           )
         }
-        disabled={editingMode?.type === 'note'} // disable while editing a note
+        disabled={editingMode?.type === 'note'}
       >
         {editingMode?.type === 'contact' ? 'Cancel' : 'Edit Contact'}
       </button>
 
+      {/* Contact edit form */}
       {editingMode?.type === 'contact' && (
         <>
           <ContactForm
@@ -190,19 +192,14 @@ function ContactDetails({
             successMessage={null}
             newContactId={null}
           />
-          <button
-            onClick={() =>
-              setEditingMode(
-                editingMode?.type === 'contact' ? null : { type: 'contact' }
-              )
-            }
-            disabled={editingMode?.type === 'note'}
-          >
-            {editingMode?.type === 'contact' ? 'Cancel' : 'Edit Contact'}
+          <button onClick={handleUpdateContact} disabled={isSaving}>
+            {isSaving ? 'Saving…' : 'Save Changes'}
           </button>
         </>
       )}
+
       <h3>Notes</h3>
+      {/* add new note button */}
       <button
         onClick={() => {
           if (editingMode !== null) return;
@@ -212,6 +209,8 @@ function ContactDetails({
       >
         {showNoteForm ? 'Hide Note Form' : 'Add New Note'}
       </button>
+
+      {/* add new note form */}
       {showNoteForm && (
         <div className="note-form-container">
           <NoteForm
@@ -224,6 +223,7 @@ function ContactDetails({
         </div>
       )}
 
+      {/* existing notes */}
       <ul>
         {contactNotes.map((note) => (
           <Note

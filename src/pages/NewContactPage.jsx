@@ -96,7 +96,6 @@ function NewContactFormPage({
   return (
     <div>
       <h2>Add New Contact</h2>
-
       <form onSubmit={handleSubmit}>
         <ContactForm
           contactFormData={contactFormData}
@@ -106,6 +105,16 @@ function NewContactFormPage({
           successMessage={successMessage}
           newContactId={newContactId}
         />
+
+        <label htmlFor="headshot">Headshot:</label>
+        <input
+          type="file"
+          id="headshot"
+          name="headshot"
+          accept="image/png, image/jpeg"
+          onChange={handleFileChange}
+        />
+
         <h3>Notes</h3>
         <NoteForm
           noteFormData={noteFormData}
