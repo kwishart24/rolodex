@@ -11,6 +11,7 @@ import ContactInfo from '../features/contacts/ContactInfo.jsx';
 import Note from '../features/notes/Note.jsx';
 import NoteForm from '../features/notes/NoteForm.jsx';
 import ContactForm from '../features/contacts/ContactForm.jsx';
+import { uploadHeadshot } from '../upload.js';
 
 function ContactDetails({
   noteFormData,
@@ -25,6 +26,8 @@ function ContactDetails({
   handleFileChange,
   contactList,
   updateContactInAirtable,
+  headshotFile,
+  setHeadshotFile,
 }) {
   const { contactId } = useParams();
 
@@ -65,8 +68,22 @@ function ContactDetails({
     setIsSaving(true);
 
     try {
-      await updateContactInAirtable(currentContact.contactId, contactFormData);
+      let headshotUrl = currentContact.headshot;
+
+      //if user selected a new file, upload it
+      if (headshotFile) {
+        headshotUrl = await uploadHeadshot(headshotFile);
+      }
+
+      await updateContactInAirtable(currentContact.contactId, {
+        ...contactFormData,
+        headshot: headshotUrl
+          ? [{ url: headshotUrl }]
+          : currentContact.headshot || [],
+      });
+
       setEditingMode(null);
+      setHeadshotFile(null);
     } finally {
       setIsSaving(false);
     }

@@ -14,31 +14,13 @@ function NewContactFormPage({
   contactFormData,
   setContactFormData,
   handleContactChange,
+  headshotFile,
+  setHeadshotFile,
+  handleFileChange,
 }) {
-  const [headshotFile, setHeadshotFile] = useState(null);
   const [successMessage, setSuccessMessage] = useState('');
-  // const [contactFormData, setContactFormData] = useState({
-  //   firstName: '',
-  //   lastName: '',
-  //   phone: '',
-  //   email: '',
-  //   jobTitle: '',
-  //   company: '',
-  //   website: '',
-  // });
 
   const [newContactId, setNewContactId] = useState(null);
-
-  const handleFileChange = (event) => {
-    setHeadshotFile(event.target.files[0]);
-  };
-
-  // const handleChange = (event) => {
-  //   setContactFormData({
-  //     ...contactFormData,
-  //     [event.target.name]: event.target.value,
-  //   });
-  // };
 
   const handleCreateContact = async (e) => {
     e.preventDefault();
@@ -55,7 +37,7 @@ function NewContactFormPage({
       // Create the contact
       const createdContact = await createContactInAirtable({
         ...contactFormData,
-        headshot: headshotUrl,
+        headshot: headshotUrl ? [{ url: headshotUrl }] : [],
       });
 
       //Create the note

@@ -27,6 +27,13 @@ function App() {
     website: '',
   });
 
+  //headshot file state
+  const [headshotFile, setHeadshotFile] = useState(null);
+
+  const handleFileChange = (e) => {
+    setHeadshotFile(e.target.files[0]);
+  };
+
   const createContactInAirtable = async (newContactData) => {
     const createdContact = await createContact(newContactData); // your API call
 
@@ -119,6 +126,9 @@ function App() {
               handleContactChange={handleContactChange}
               updateContactInAirtable={updateContactInAirtable}
               contactList={contactList}
+              headshotFile={headshotFile}
+              setHeadshotFile={setHeadshotFile}
+              handleFileChange={handleFileChange}
             />
           }
         ></Route>
@@ -135,6 +145,9 @@ function App() {
               setContactFormData={setContactFormData}
               handleContactChange={handleContactChange}
               createContactInAirtable={createContactInAirtable}
+              headshotFile={headshotFile}
+              setHeadshotFile={setHeadshotFile}
+              handleFileChange={handleFileChange}
             />
           }
         ></Route>
