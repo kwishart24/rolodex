@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import './App.css';
 import { Routes, Route } from 'react-router';
 import NavBar from './shared/NavBar';
-import { fetchContacts, updateContact } from './api';
+import { fetchContacts, updateContact, createContact } from './api';
 import ContactsPage from './pages/ContactsPage';
 import AboutPage from './pages/AboutPage';
 import NotFoundPage from './pages/NotFoundPage';
@@ -26,6 +26,15 @@ function App() {
     company: '',
     website: '',
   });
+
+  const createContactInAirtable = async (newContactData) => {
+    const createdContact = await createContact(newContactData); // your API call
+
+    const updatedContacts = await fetchContacts();
+    setContactList(updatedContacts);
+
+    return createdContact; // so NewContactPage can redirect to it
+  };
 
   //update contact in airtable
   const updateContactInAirtable = async (contactId, updatedData) => {
@@ -125,6 +134,7 @@ function App() {
               contactFormData={contactFormData}
               setContactFormData={setContactFormData}
               handleContactChange={handleContactChange}
+              createContactInAirtable={createContactInAirtable}
             />
           }
         ></Route>

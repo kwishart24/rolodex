@@ -1,4 +1,8 @@
-function ContactForm({ contactFormData, handleContactChange }) {
+function ContactForm({
+  contactFormData,
+  handleContactChange,
+  handleFileChange,
+}) {
   return (
     <div className="contact-form-fields">
       <label htmlFor="firstName">First Name:</label>
@@ -63,6 +67,19 @@ function ContactForm({ contactFormData, handleContactChange }) {
         value={contactFormData.website}
         onChange={handleContactChange}
       />
+
+      {handleFileChange && (
+        <>
+          <label htmlFor="headshot">Headshot:</label>
+          <input
+            type="file"
+            id="headshot"
+            name="headshot"
+            accept="image/png, image/jpeg"
+            onChange={handleFileChange}
+          />
+        </>
+      )}
     </div>
   );
 }
