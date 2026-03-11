@@ -8,6 +8,7 @@ import AboutPage from './pages/AboutPage';
 import NotFoundPage from './pages/NotFoundPage';
 import ContactDetails from './pages/ContactDetails';
 import NewContactFormPage from './pages/NewContactPage';
+import Footer from './shared/Footer';
 
 function App() {
   // const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
@@ -153,6 +154,7 @@ function App() {
         ></Route>
         <Route path="*" element={<NotFoundPage />}></Route>
       </Routes>
+      <Footer />
     </div>
   );
 }
