@@ -92,7 +92,6 @@ function NewContactFormPage({
 
   return (
     <div className="new-contact-page">
-      <h2>Add New Contact</h2>
       {successMessage && (
         <>
           <p className="success">{successMessage}</p>

@@ -6,6 +6,7 @@ import Note from '../features/notes/Note.jsx';
 import NoteForm from '../features/notes/NoteForm.jsx';
 import ContactForm from '../features/contacts/ContactForm.jsx';
 import { uploadHeadshot } from '../upload.js';
+import NotFoundPage from './NotFoundPage.jsx';
 
 function ContactDetails({
   noteFormData,
@@ -26,6 +27,11 @@ function ContactDetails({
   setErrorMessage,
 }) {
   const { contactId } = useParams();
+  const contact = contactList.find((c) => c.contactId === contactId);
+
+  if (!contact) {
+    return <NotFoundPage />;
+  }
 
   //NotesList
   const [notesList, setNotesList] = useState([]);

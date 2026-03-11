@@ -23,7 +23,6 @@ function ContactsPage({ contactList, isLoading, queryString, setQueryString }) {
   }
   return (
     <>
-      <h1>My Contacts</h1>
       <div className="contact-controls">
         <input
           type="text"
