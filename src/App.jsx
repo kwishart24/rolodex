@@ -21,6 +21,9 @@ function App() {
 
   const [title, setTitle] = useState('');
 
+  //ContactList
+  const [contactList, setContactList] = useState([]);
+
   useEffect(() => {
     const path = location.pathname;
 
@@ -29,17 +32,52 @@ function App() {
     } else if (path === '/about') {
       setTitle('About');
     } else if (path === '/addcontact') {
-      setTitle('Add New Contact');
+      setTitle('New Contact');
     } else if (path.startsWith('/') && path.split('/').length === 2) {
       // Matches "/12345" or "/abcde"
       setTitle('Contact Details');
     } else {
-      setTitle('Not Found');
+      setTitle('Page Not Found');
     }
   }, [location.pathname]);
+  useEffect(() => {
+    const path = location.pathname;
 
-  //ContactList
-  const [contactList, setContactList] = useState([]);
+    // Home
+    if (path === '/') {
+      setTitle('My Contacts');
+      return;
+    }
+
+    // About
+    if (path === '/about') {
+      setTitle('About');
+      return;
+    }
+
+    // Add Contact
+    if (path === '/addcontact') {
+      setTitle('Add New Contact');
+      return;
+    }
+
+    // Contact Details (dynamic route)
+    if (path.startsWith('/') && path.split('/').length === 2) {
+      const contactId = path.slice(1); // remove leading "/"
+      const exists = contactList.some((c) => c.contactId === contactId);
+
+      if (exists) {
+        setTitle('Contact Details');
+      } else {
+        setTitle('Contact Not Found');
+      }
+
+      return;
+    }
+
+    // Anything else
+    setTitle('Not Found');
+  }, [location.pathname, contactList]);
 
   //creating new contacts
   const [contactFormData, setContactFormData] = useState({

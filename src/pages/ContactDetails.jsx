@@ -6,11 +6,13 @@ import Note from '../features/notes/Note.jsx';
 import NoteForm from '../features/notes/NoteForm.jsx';
 import ContactForm from '../features/contacts/ContactForm.jsx';
 import { uploadHeadshot } from '../upload.js';
+import NotFoundPage from './NotFoundPage.jsx';
 
 function ContactDetails({
   noteFormData,
   handleNoteChange,
   setNoteFormData,
+  isLoading,
   isSaving,
   setIsSaving,
   setIsLoading,
@@ -160,8 +162,14 @@ function ContactDetails({
     }
   }, [editingMode]);
 
-  if (!currentContact) {
+  // 1. Contacts haven't loaded yet
+  if (contactList.length === 0 && isLoading) {
     return <p>Loading contact...</p>;
+  }
+
+  // 2. Contacts finished loading, but no match
+  if (!currentContact && !isLoading) {
+    return <NotFoundPage />;
   }
 
   if (!contactNotes) {
